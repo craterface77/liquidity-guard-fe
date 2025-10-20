@@ -30,6 +30,25 @@ The development server will be available at http://localhost:3000. Store environ
 
 After connecting a wallet, the top-right button on the app page will display the truncated address. Clicking it again opens WalletConnect&apos;s account view where you can disconnect.
 
+### Integration configuration
+
+Create or update `.env.local` with the deployed LiquidityGuard stack configuration:
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://api.liq-guard.io
+NEXT_PUBLIC_RESERVE_POOL_ADDRESS=0xReservePool
+NEXT_PUBLIC_POLICY_DISTRIBUTOR_ADDRESS=0xPolicyDistributor
+NEXT_PUBLIC_USDC_ADDRESS=0xUsdc
+NEXT_PUBLIC_LGUSD_ADDRESS=0xLgUsd              # optional; fetched from reserve when omitted
+NEXT_PUBLIC_CHAIN_ID=11155111                  # expected chain for transactions (e.g. Sepolia)
+NEXT_PUBLIC_CURVE_LP_ADDRESS=0xCurveLpToken
+NEXT_PUBLIC_AAVE_LENDING_POOL_ADDRESS=0xAavePool
+NEXT_PUBLIC_AAVE_COLLATERAL_ADDRESS=0xCollateralAsset
+NEXT_PUBLIC_AAVE_CHAIN_ID=11155111             # optional override if DLP runs on a different chain
+```
+
+The front-end reads metadata from `NEXT_PUBLIC_API_BASE_URL`, requests signed quotes from the backend, and uses the configured contract addresses to approve USDC transfers, deposit into the reserve, and mint policies.
+
 ## Deploying to Vercel
 
 1. Push this repository to GitHub (or another Git provider supported by Vercel).
