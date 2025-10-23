@@ -8,6 +8,10 @@ import type {
   ReserveOverview,
   TermDays,
   PoolSummary,
+  ClaimPreview,
+  ClaimSignatureResponse,
+  ClaimRecord,
+  ClaimQueueItem,
 } from "./types";
 
 import { env } from "./env";
@@ -26,7 +30,7 @@ async function parseErrorResponse(response: Response): Promise<string> {
       return parts.join(" — ");
     }
   } catch {
-    // ignore JSON parse issues and fall back to status text
+    /* ignore */
   }
   return response.statusText || "Unexpected API error";
 }
@@ -70,7 +74,9 @@ export interface CreatePolicyDraftPayload {
   idempotencyKey?: string;
 }
 
-export async function createPolicyDraft(payload: CreatePolicyDraftPayload): Promise<PolicyDraft> {
+export async function createPolicyDraft(
+  payload: CreatePolicyDraftPayload
+): Promise<PolicyDraft> {
   return apiFetch<PolicyDraft>("/v1/policies", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -99,4 +105,30 @@ export async function fetchPolicies(wallet: string): Promise<PolicyRecord[]> {
   }
   const query = new URLSearchParams({ wallet }).toString();
   return apiFetch<PolicyRecord[]>(`/v1/policies?${query}`);
+}
+
+export async function previewClaim(policyId: string): Promise<ClaimPreview> {
+  const query = new URLSearchParams({ policyId }).toString();
+  return apiFetch<ClaimPreview>(`/v1/claim/preview?${query}`);
+}
+
+export async function signClaim(
+  policyId: string
+): Promise<ClaimSignatureResponse> {
+  return apiFetch<ClaimSignatureResponse>("/v1/claim/sign", {
+    method: "POST",
+    body: JSON.stringify({ policyId }),
+  });
+}
+
+export async function fetchClaims(wallet: string): Promise<ClaimRecord[]> {
+  if (!wallet) {
+    return [];
+  }
+  const query = new URLSearchParams({ wallet }).toString();
+  return apiFetch<ClaimRecord[]>(`/v1/claims?${query}`);
+}
+
+export async function fetchClaimQueue(): Promise<ClaimQueueItem[]> {
+  return apiFetch<ClaimQueueItem[]>("/v1/claims/queue");
 }

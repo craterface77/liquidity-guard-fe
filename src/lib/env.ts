@@ -42,14 +42,28 @@ function parseChainId(value: string | undefined): number | undefined {
 
 export const env = {
   apiBaseUrl: normalizeApiBase(process.env.NEXT_PUBLIC_API_BASE_URL),
-  reservePoolAddress: normalizeAddress(process.env.NEXT_PUBLIC_RESERVE_POOL_ADDRESS),
-  policyDistributorAddress: normalizeAddress(process.env.NEXT_PUBLIC_POLICY_DISTRIBUTOR_ADDRESS),
+  reservePoolAddress: normalizeAddress(
+    process.env.NEXT_PUBLIC_RESERVE_POOL_ADDRESS
+  ),
+  policyDistributorAddress: normalizeAddress(
+    process.env.NEXT_PUBLIC_POLICY_DISTRIBUTOR_ADDRESS
+  ),
+  payoutModuleAddress: normalizeAddress(
+    process.env.NEXT_PUBLIC_PAYOUT_MODULE_ADDRESS
+  ),
+  policyNftAddress: normalizeAddress(
+    process.env.NEXT_PUBLIC_POLICY_NFT_ADDRESS
+  ),
   usdcAddress: normalizeAddress(process.env.NEXT_PUBLIC_USDC_ADDRESS),
   lgusdAddress: normalizeAddress(process.env.NEXT_PUBLIC_LGUSD_ADDRESS),
   targetChainId: parseChainId(process.env.NEXT_PUBLIC_CHAIN_ID),
   curveLpAddress: normalizeAddress(process.env.NEXT_PUBLIC_CURVE_LP_ADDRESS),
-  aaveLendingPoolAddress: normalizeAddress(process.env.NEXT_PUBLIC_AAVE_LENDING_POOL_ADDRESS),
-  aaveCollateralAddress: normalizeAddress(process.env.NEXT_PUBLIC_AAVE_COLLATERAL_ADDRESS),
+  aaveLendingPoolAddress: normalizeAddress(
+    process.env.NEXT_PUBLIC_AAVE_LENDING_POOL_ADDRESS
+  ),
+  aaveCollateralAddress: normalizeAddress(
+    process.env.NEXT_PUBLIC_AAVE_COLLATERAL_ADDRESS
+  ),
   aaveChainId: parseChainId(process.env.NEXT_PUBLIC_AAVE_CHAIN_ID),
 } as const;
 

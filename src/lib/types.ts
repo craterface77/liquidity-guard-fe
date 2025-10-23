@@ -122,3 +122,57 @@ export interface ApiErrorResponse {
   code?: string;
   details?: unknown;
 }
+
+export type ClaimStatus = "signed" | "queued" | "executed" | "failed";
+
+export interface ClaimPreviewRequest {
+  policyId: string;
+}
+
+export interface ClaimPreview {
+  policyId: string;
+  product: ProductType;
+  policyType: PolicyType;
+  riskId: string;
+  S: number;
+  E: number;
+  payload: Record<string, unknown>;
+  payoutEstimate: number;
+}
+
+export interface ClaimSignatureRequest {
+  policyId: string;
+}
+
+export interface ClaimSignatureResponse {
+  policyId: string;
+  policyType: PolicyType;
+  riskId: string;
+  eip712Domain: Record<string, unknown>;
+  typedData: Record<string, unknown>;
+  payload: Record<string, unknown>;
+  signature: string;
+  payout: number;
+  expiresAt: string;
+}
+
+export interface ClaimRecord {
+  claimId: string;
+  policyId: string;
+  product: ProductType;
+  status: ClaimStatus;
+  payout: number;
+  createdAt: string;
+  txHash?: string;
+}
+
+export interface ClaimQueueItem {
+  claimId: string;
+  policyId: string;
+  product: ProductType;
+  riskId: string;
+  wallet: string;
+  payout: number;
+  queuedAt: string;
+  status: ClaimStatus;
+}

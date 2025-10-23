@@ -11,6 +11,8 @@ import {
 } from "wagmi";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 
+import { AppHeader } from "@/components/AppHeader";
+
 import { env } from "@/lib/env";
 import { createPolicyDraft, fetchPools, finalizePolicy } from "@/lib/api";
 import { policyDistributorAbi, reservePoolAbi } from "@/lib/contracts";
@@ -160,6 +162,10 @@ function AppPage() {
     "idle" | "pending" | "success" | "error"
   >("idle");
   const [depositMessage, setDepositMessage] = useState<string | null>(null);
+  const [usdcMintStatus, setUsdcMintStatus] = useState<
+    "idle" | "pending" | "success" | "error"
+  >("idle");
+  const [usdcMintMessage, setUsdcMintMessage] = useState<string | null>(null);
   const [curveMintStatus, setCurveMintStatus] = useState<
     "idle" | "pending" | "success" | "error"
   >("idle");
@@ -168,11 +174,6 @@ function AppPage() {
     "idle" | "pending" | "success" | "error"
   >("idle");
   const [aaveMintMessage, setAaveMintMessage] = useState<string | null>(null);
-
-  const walletLabel = useMemo(() => {
-    if (!isConnected || !address) return "Connect wallet";
-    return shorten(address);
-  }, [address, isConnected]);
 
   const wrongNetwork =
     Boolean(targetChainId) &&
@@ -346,14 +347,6 @@ function AppPage() {
     if (!address) return;
     void refreshBalances();
   }, [address, refreshBalances]);
-
-  const handleConnectClick = useCallback(() => {
-    if (isConnected) {
-      void open({ view: "Account" });
-    } else {
-      void open();
-    }
-  }, [isConnected, open]);
 
   const handleCurveQuote = useCallback(async () => {
     setCurveQuoteError(null);
@@ -821,26 +814,7 @@ function AppPage() {
 
   return (
     <main className="app-shell">
-      <header className="app-header">
-        <div className="app-brand">
-          <a className="app-brand__mark" href="/">
-            LG
-          </a>
-          <div>
-            <p className="app-brand__title">LiquidityGuard</p>
-            <p className="app-brand__subtitle">
-              On-chain coverage &amp; liquidity
-            </p>
-          </div>
-        </div>
-        <button
-          className="button button--primary"
-          type="button"
-          onClick={handleConnectClick}
-        >
-          {walletLabel}
-        </button>
-      </header>
+      <AppHeader />
 
       {wrongNetwork && (
         <p className="status status--warning">
@@ -974,7 +948,7 @@ function AppPage() {
               <dd>{aaveTermDays} days</dd>
             </div>
           </dl>
-          <label className="card__label">Insured amount (USDC)</label>
+          <label className="card__label">Insured amount (aPYUSD)</label>
           <input
             className="card__input"
             type="text"
@@ -1109,6 +1083,36 @@ function AppPage() {
       </section>
 
       <section className="mint-grid">
+        <article className="mint-card">
+          <h3>Mint USDC (test)</h3>
+          <p>Mint 1,000 USDC test tokens to your wallet.</p>
+          <button
+            className="button button--ghost"
+            type="button"
+            onClick={() =>
+              handleMintToken(
+                usdcAddress,
+                setUsdcMintStatus,
+                setUsdcMintMessage,
+                "USDC"
+              )
+            }
+            disabled={usdcMintStatus === "pending"}
+          >
+            {usdcMintStatus === "pending" ? "Minting…" : "Mint 1000"}
+          </button>
+          {usdcMintMessage && (
+            <p
+              className={`status ${
+                usdcMintStatus === "success"
+                  ? "status--success"
+                  : "status--error"
+              }`}
+            >
+              {usdcMintMessage}
+            </p>
+          )}
+        </article>
         <article className="mint-card">
           <h3>Mint Curve LP (test)</h3>
           <p>Mint 1,000 Curve stable LP test tokens to your wallet.</p>
