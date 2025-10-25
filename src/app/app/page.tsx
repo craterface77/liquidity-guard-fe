@@ -369,7 +369,7 @@ function AppPage() {
       return;
     }
 
-    const poolId = curvePool?.poolId ?? "curve-usdc-usdf";
+    const poolId = curvePool?.poolId ?? "curve-usdc-pyusd";
 
     setCurveQuoteLoading(true);
   try {
@@ -828,7 +828,7 @@ function AppPage() {
       <section className="card-grid">
         <article className="card">
           <header className="card__header">
-            <h2>Curve USDC/USDf</h2>
+            <h2>Curve PYUSD/USDC</h2>
             <p>
               Protect Curve stable LP tokens against depeg windows and liquidity
               freezes.
